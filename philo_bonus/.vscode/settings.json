@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"philo.h": "c",
+		"semaphore.h": "c",
+		"types.h": "c",
+		"fcntl.h": "c",
+		"unistd.h": "c",
+		"philo_bonus.h": "c"
+	},
+	"C_Cpp.errorSquiggles": "disabled",
+	"cmake.configureOnOpen": false
+}
