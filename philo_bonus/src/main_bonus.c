@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:15:41 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/18 17:04:11 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 22:13:49 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	ft_message(t_philo *ph, char c)
 	if (!ph->core->isdead)
 	{
 		if (c == 'd')
+		{
 			printf("%ld %d \e[1;31mdied\e[0m\n", ft_time(ph), ph->id);
+			sem_post(ph->core->dead);
+			return ;
+		}
 		if (c == 'e')
 			printf("%ld %d \e[1;35mis eating\e[0m\n", ft_time(ph), ph->id);
 		if (c == 's')
@@ -26,7 +30,8 @@ void	ft_message(t_philo *ph, char c)
 		if (c == 't')
 			printf("%ld %d \e[1;32mis thinking\e[0m\n", ft_time(ph), ph->id);
 		if (c == 'f')
-			printf("%ld %d \e[1;37mhas taken fork\e[0m\n", ft_time(ph), ph->id);
+			printf("%ld %d \e[1;37mhas taken a fork\e[0m\n",
+				ft_time(ph), ph->id);
 	}
 	sem_post(ph->core->print);
 }
@@ -39,13 +44,34 @@ void	*ft_kill(void *arg)
 	core = (t_core *)arg;
 	i = 0;
 	sem_wait(core->dead);
+	sem_wait(core->pid_sem);
 	while (i < core->ph_n)
 	{
 		kill(core->philo[i].pid, SIGKILL);
 		i++;
 	}
+	sem_post(core->pid_sem);
 	sem_post(core->dead);
 	return (NULL);
+}
+
+void	ft_norminette_main(t_core *core)
+{
+	int	i;
+
+	i = 0;
+	while (i < core->ph_n)
+	{
+		sem_wait(core->pid_sem);
+		core->philo[i].pid = fork();
+		sem_post(core->pid_sem);
+		if (core->philo[i].pid == 0)
+			ft_routine(core->philo + i);
+		else if (core->philo[i].pid == -1)
+			stderr_exit("Error forking\n");
+		i++;
+		ft_usleep(10);
+	}
 }
 
 int	main(int ac, char **av)
@@ -55,32 +81,17 @@ int	main(int ac, char **av)
 	pthread_t	handle_death;
 
 	i = 0;
-	if (ac < 5 || 6 < ac)
-		return (stderr_exit("Invalid number of arguments\n"));
 	core = (t_core *) malloc(sizeof(t_core));
-	if (!core)
-		return (stderr_exit("Error on Malloc\n"));
-	if (ft_checkargs(ac - 1, av + 1) < 0)
-	{
-		free(core);
-		return (stderr_exit("Invalid arguments\n"));
-	}
 	ft_init(ac, av, core);
 	if (pthread_create(&handle_death, NULL, &ft_kill, (void *)core))
 		stderr_exit("Error creating thread\n");
+	ft_norminette_main(core);
 	while (i < core->ph_n)
 	{
-		core->philo[i].pid = fork();
-		if (core->philo[i].pid == 0)
-			ft_routine(core->philo + i);
-		else if (core->philo[i].pid == -1)
-			stderr_exit("Error forking\n");
+		waitpid(core->philo[i].pid, NULL, 0);
 		i++;
 	}
-	i = 0;
-	while (i < core->ph_n)
-		waitpid(core->philo[i++].pid, NULL, 0);
-	
+	sem_post(core->dead);
 	pthread_join(handle_death, NULL);
 	ft_free_core(core);
 	return (0);

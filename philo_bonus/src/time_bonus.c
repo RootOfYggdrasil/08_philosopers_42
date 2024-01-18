@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 20:05:57 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/17 18:15:30 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 22:36:27 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,5 @@ void	ft_usleep(long int time)
 
 	start = ft_get_time();
 	while ((ft_get_time() - start) < time)
-		usleep(50);
+		usleep(5);
 }

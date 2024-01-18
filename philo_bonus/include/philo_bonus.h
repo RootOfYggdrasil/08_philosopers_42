@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:43:30 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/18 16:50:23 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 19:48:01 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ typedef struct s_core
 	size_t			eat_n;
 	t_philo			*philo;
 	pthread_t		*thread;
-	sem_t	*fork;
-	sem_t	*print;
-	sem_t	*dead;
-	sem_t	*check_eat;
+	sem_t			*fork;
+	sem_t			*print;
+	sem_t			*dead;
+	sem_t			*pid_sem;
+	sem_t			*check_eat;
 	int				stop;
 	long int		t_start;
 	suseconds_t		ut_start;
@@ -65,7 +66,7 @@ int			ft_atoi(const char *nptr);
 size_t		ft_strlen(const char *s);
 int			ft_isspace(int c);
 void		ft_usleep(long int time);
-int			stderr_exit(const char *s);
+void		stderr_exit(const char *s);
 
 int			ft_checkargs(int ac, char **av);
 void		ft_init(int ac, char **av, t_core *c);
@@ -74,5 +75,5 @@ void		ft_routine(t_philo *arg);
 void		ft_message(t_philo *ph, char c);
 
 void		ft_free_core(t_core *c);
-
+int			ft_isdigit(int c);
 #endif

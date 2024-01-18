@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:39:14 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/18 16:56:15 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 22:35:16 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ void	ft_init_sem(t_core *c)
 	sem_unlink("dead");
 	sem_unlink("fork");
 	sem_unlink("check_eat");
+	sem_unlink("pid_sem");
+	c->pid_sem = sem_open("pid_sem", O_CREAT, 0660, 1);
 	c->print = sem_open("print", O_CREAT, 0660, 1);
-	c->dead =sem_open("dead", O_CREAT, 0660, 0);
-	c->fork =sem_open("fork", O_CREAT, 0660, c->ph_n);
-	c->check_eat =sem_open("check_eat", O_CREAT, 0660, 1);
+	c->dead = sem_open("dead", O_CREAT, 0660, 0);
+	c->fork = sem_open("fork", O_CREAT, 0660, c->ph_n);
+	c->check_eat = sem_open("check_eat", O_CREAT, 0660, 1);
 }
 
 void	ft_setenv(int ac, char **av, t_core *c)
@@ -40,7 +42,7 @@ void	ft_setenv(int ac, char **av, t_core *c)
 	c->isdead = 0;
 	c->phfull_n = c->ph_n;
 	c->t_start = ft_get_time();
-	c->ut_start = ft_get_time();
+	//c->ut_start = ft_get_time() + (c->ph_n * 2) * 10;
 }
 
 void	ft_allocate_philo(t_core *c)
@@ -48,7 +50,9 @@ void	ft_allocate_philo(t_core *c)
 	int	i;
 
 	i = 0;
+	sem_wait(c->pid_sem);
 	c->philo = malloc(c->ph_n * sizeof(t_philo));
+	sem_post(c->pid_sem);
 	if (!c->philo)
 		stderr_exit("Error on Malloc\n");
 	while (i < c->ph_n)
@@ -67,11 +71,20 @@ void	ft_allocate_philo(t_core *c)
 int	ft_checkargs(int ac, char **av)
 {
 	int	i;
+	int	j;
 	int	out;
 
 	i = 0;
 	while (i < ac)
 	{
+		j = 0;
+		while (av[i][j] != '\0')
+		{
+			if (ft_isdigit(av[i][j]))
+				j++;
+			else
+				return (-1);
+		}
 		out = ft_atoi(av[i]);
 		if (out < 0)
 			return (out);
@@ -82,7 +95,15 @@ int	ft_checkargs(int ac, char **av)
 
 void	ft_init(int ac, char **av, t_core *c)
 {
+	if (ac < 5 || 6 < ac)
+		return (stderr_exit("Invalid number of arguments\n"));
+	if (!c)
+		return (stderr_exit("Error on Malloc\n"));
+	if (ft_checkargs(ac - 1, av + 1) < 0)
+	{
+		free(c);
+		return (stderr_exit("Invalid arguments\n"));
+	}
 	ft_setenv(ac, av, c);
 	ft_allocate_philo(c);
-	
 }

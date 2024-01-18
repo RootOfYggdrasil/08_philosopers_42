@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:43:32 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/17 18:17:06 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 19:48:06 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,13 @@ int	ft_isspace(int c)
 	|| c == '\t' || c == '\v' || c == ' ');
 }
 
-int	stderr_exit(const char *s)
+void	stderr_exit(const char *s)
 {
 	write(2, s, ft_strlen(s));
-	return (1);
+	exit (1);
+}
+
+int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
 }
