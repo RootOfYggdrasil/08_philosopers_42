@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:43:30 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/17 18:21:22 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:50:23 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_core
 
 typedef struct s_philo
 {
+	pid_t			pid;	
 	int				id;
 	int				eat_n;
 	size_t			eat_t;
@@ -69,11 +70,9 @@ int			stderr_exit(const char *s);
 int			ft_checkargs(int ac, char **av);
 void		ft_init(int ac, char **av, t_core *c);
 
-void		*ft_routine(void *arg);
+void		ft_routine(t_philo *arg);
 void		ft_message(t_philo *ph, char c);
-void		ft_start_routine(t_core *c);
 
 void		ft_free_core(t_core *c);
-void		ft_bigbro_watchingyou(t_core *c);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:39:14 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/17 17:07:52 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:56:15 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ void	ft_init_sem(t_core *c)
 	sem_unlink("dead");
 	sem_unlink("fork");
 	sem_unlink("check_eat");
-	sem_unlink("");
-	sem_open("print", O_CREAT, 0660, 1);
-	sem_open("dead", O_CREAT, 0660, 1);
-	sem_open("fork", O_CREAT, 0660, c->ph_n);
-	sem_open("check_eat", O_CREAT, 0660, 1);
-	sem_open("", O_CREAT, 0660, 1);
+	c->print = sem_open("print", O_CREAT, 0660, 1);
+	c->dead =sem_open("dead", O_CREAT, 0660, 0);
+	c->fork =sem_open("fork", O_CREAT, 0660, c->ph_n);
+	c->check_eat =sem_open("check_eat", O_CREAT, 0660, 1);
 }
 
 void	ft_setenv(int ac, char **av, t_core *c)
@@ -41,11 +39,6 @@ void	ft_setenv(int ac, char **av, t_core *c)
 	ft_init_sem(c);
 	c->isdead = 0;
 	c->phfull_n = c->ph_n;
-	while (i < c->ph_n)
-		pthread_mutex_init(c->fork + i++, NULL);
-	pthread_mutex_init(c->print, NULL);
-	pthread_mutex_init(c->dead, NULL);
-	pthread_mutex_init(&c->check_eat, NULL);
 	c->t_start = ft_get_time();
 	c->ut_start = ft_get_time();
 }
@@ -55,6 +48,9 @@ void	ft_allocate_philo(t_core *c)
 	int	i;
 
 	i = 0;
+	c->philo = malloc(c->ph_n * sizeof(t_philo));
+	if (!c->philo)
+		stderr_exit("Error on Malloc\n");
 	while (i < c->ph_n)
 	{
 		c->philo[i].id = i;
