@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:42:19 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/18 22:48:56 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/19 11:24:17 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	*ft_check_death(void *arg)
 			break ;
 		}
 		sem_post(philo->core->check_eat);
-		//ft_usleep(2);
 	}
 	return (NULL);
 }
@@ -63,17 +62,13 @@ void	ft_routine(t_philo	*philo)
 	pthread_t	check_death;
 
 	pthread_create(&check_death, NULL, ft_check_death, (void *)philo);
-	//sem_wait(philo->core->check_eat);
 	while (philo->eat_n != 0 && !philo->core->isdead)
 	{
-		//sem_post(philo->core->check_eat);
 		ft_eat(philo);
 		ft_message(philo, 's');
 		ft_usleep(philo->sleep_t);
 		ft_message(philo, 't');
-		//sem_wait(philo->core->check_eat);
 	}
-	//sem_post(philo->core->check_eat);
 	pthread_join(check_death, NULL);
 	ft_free_core(philo->core);
 	exit(0);

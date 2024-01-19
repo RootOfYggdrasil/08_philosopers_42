@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:39:14 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/18 22:35:16 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/19 11:24:13 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	ft_setenv(int ac, char **av, t_core *c)
 	c->isdead = 0;
 	c->phfull_n = c->ph_n;
 	c->t_start = ft_get_time();
-	//c->ut_start = ft_get_time() + (c->ph_n * 2) * 10;
 }
 
 void	ft_allocate_philo(t_core *c)

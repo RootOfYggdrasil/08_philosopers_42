@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:39:14 by sdel-gra          #+#    #+#             */
-/*   Updated: 2023/11/28 17:24:19 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/19 11:35:25 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,7 @@ int	ft_checkargs(int ac, char **av)
 void	ft_init(int ac, char **av, t_core *c)
 {
 	ft_setenv(ac, av, c);
+	if (c->eat_n == 0)
+		c->ph_n = 0;
 	ft_allocate_philo(c);
 }
