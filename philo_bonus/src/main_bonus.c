@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:15:41 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/18 22:13:49 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/19 14:00:23 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_norminette_main(t_core *core)
 		else if (core->philo[i].pid == -1)
 			stderr_exit("Error forking\n");
 		i++;
-		ft_usleep(10);
+		ft_usleep(2);
 	}
 }
 

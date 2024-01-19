@@ -6,7 +6,7 @@
 /*   By: sdel-gra <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:42:19 by sdel-gra          #+#    #+#             */
-/*   Updated: 2024/01/19 11:24:17 by sdel-gra         ###   ########.fr       */
+/*   Updated: 2024/01/19 14:00:46 by sdel-gra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,9 @@ void	ft_eat(t_philo *ph)
 	sem_wait(ph->core->check_eat);
 	if (ph->eat_n > 0)
 		ph -> eat_n--;
-	sem_post(ph->core->check_eat);
-	ft_usleep(ph->eat_t);
-	sem_wait(ph->core->check_eat);
 	ph->lm_t = ft_get_time();
 	sem_post(ph->core->check_eat);
+	ft_usleep(ph->eat_t);
 	sem_post(ph->core->fork);
 	sem_post(ph->core->fork);
 }
@@ -68,6 +66,7 @@ void	ft_routine(t_philo	*philo)
 		ft_message(philo, 's');
 		ft_usleep(philo->sleep_t);
 		ft_message(philo, 't');
+		ft_usleep(3);
 	}
 	pthread_join(check_death, NULL);
 	ft_free_core(philo->core);
